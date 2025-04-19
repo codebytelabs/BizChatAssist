@@ -1,0 +1,41 @@
+# dependencies
+/my-next-app/node_modules
+/my-next-app/.pnp
+/my-next-app/.pnp.js
+
+# testing
+/my-next-app/coverage
+
+# next.js
+/my-next-app/.next/
+/my-next-app/out/
+
+# production
+/my-next-app/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+/my-next-app/.env
+/my-next-app/.env.local
+/my-next-app/.env.development.local
+/my-next-app/.env.test.local
+/my-next-app/.env.production.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
