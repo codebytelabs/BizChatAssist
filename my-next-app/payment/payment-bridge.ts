@@ -2,17 +2,12 @@
  * Global Payment Bridge for BizChatAssist
  * Provides a unified payment interface with regional adapters
  */
-import { PaymentAdapter, PaymentRequest } from './payment-adapter';
-import { UPIAdapter } from './adapters/upi';
+import { PaymentAdapter, PaymentRequest, StripeAdapter, UPIAdapter, PayPalAdapter } from './payment-adapter';
 import { logAction } from '../security/audit';
-
-// Will be implemented as we add more payment providers
-// import { StripeAdapter } from './adapters/stripe';
-// import { PayPalAdapter } from './adapters/paypal';
 // import { AlipayAdapter } from './adapters/alipay';
 
 export type PaymentRegion = 'global' | 'north-america' | 'europe' | 'india' | 'apac' | 'latam' | 'africa';
-export type PaymentMethod = 'credit-card' | 'bank-transfer' | 'upi' | 'wallet' | 'bnpl' | 'crypto';
+export type PaymentMethod = 'credit-card' | 'bank-transfer' | 'upi' | 'wallet' | 'bnpl' | 'crypto' | 'paypal' | 'stripe';
 
 export interface RegionalPaymentConfig {
   id: string;
@@ -45,7 +40,33 @@ export class PaymentBridge {
     // Initialize adapters
     this.registerPaymentAdapters();
   }
-  
+
+  /**
+   * Register payment adapters for each region/method
+   */
+  private registerPaymentAdapters() {
+    // Example: Register adapters for each region/method
+    // US/EU: Stripe (credit-card), India: UPI (upi), Global: PayPal (paypal)
+    this.adapters.set('north-america', new Map([
+      ['credit-card', new StripeAdapter()],
+      ['paypal', new PayPalAdapter()]
+    ]));
+    this.adapters.set('europe', new Map([
+      ['credit-card', new StripeAdapter()],
+      ['paypal', new PayPalAdapter()]
+    ]));
+    this.adapters.set('india', new Map([
+      ['upi', new UPIAdapter()],
+      ['credit-card', new StripeAdapter()],
+      ['paypal', new PayPalAdapter()]
+    ]));
+    this.adapters.set('global', new Map([
+      ['paypal', new PayPalAdapter()],
+      ['credit-card', new StripeAdapter()]
+    ]));
+    // Add more as needed for other regions/methods
+  }
+
   /**
    * Process a payment with appropriate regional adapter
    */
@@ -79,6 +100,9 @@ export class PaymentBridge {
       
       // Process payment through adapter
       const result = await adapter.processPayment(enrichedRequest);
+
+      // TODO: Add support for provider-specific logic and metadata (e.g., generateQR, conversationId, customerPhone, upiId)
+      // These will be handled via providerMetadata or future extension of PaymentRequest
       
       // Log for audit
       await logAction({
@@ -251,22 +275,26 @@ export class PaymentBridge {
    * Register payment adapters for each region and method
    */
   private registerPaymentAdapters() {
-    // Initialize region method maps
-    this.adapters.set('global', new Map());
-    this.adapters.set('north-america', new Map());
-    this.adapters.set('europe', new Map());
-    this.adapters.set('india', new Map());
-    this.adapters.set('apac', new Map());
-    this.adapters.set('latam', new Map());
-    
-    // Register UPI adapter for India
-    const upiAdapter = new UPIAdapter();
-    this.adapters.get('india')?.set('upi', upiAdapter);
-    
-    // In the future, we'll add more adapters:
-    // this.adapters.get('global')?.set('credit-card', new StripeAdapter());
-    // this.adapters.get('global')?.set('bank-transfer', new PayPalAdapter());
-    // this.adapters.get('apac')?.set('wallet', new AlipayAdapter());
+    // Example: Register adapters for each region/method
+    // US/EU: Stripe (credit-card), India: UPI (upi), Global: PayPal (paypal)
+    this.adapters.set('north-america', new Map([
+      ['credit-card', new StripeAdapter()],
+      ['paypal', new PayPalAdapter()]
+    ]));
+    this.adapters.set('europe', new Map([
+      ['credit-card', new StripeAdapter()],
+      ['paypal', new PayPalAdapter()]
+    ]));
+    this.adapters.set('india', new Map([
+      ['upi', new UPIAdapter()],
+      ['credit-card', new StripeAdapter()],
+      ['paypal', new PayPalAdapter()]
+    ]));
+    this.adapters.set('global', new Map([
+      ['paypal', new PayPalAdapter()],
+      ['credit-card', new StripeAdapter()]
+    ]));
+    // Add more as needed for other regions/methods
   }
   
   /**
@@ -294,15 +322,18 @@ export class PaymentBridge {
       // Generate payment link or QR code
       if (paymentMethod === 'upi' && 'generateQR' in adapter) {
         // UPI specific flow with QR code
-        return await (adapter as UPIAdapter).generateQR({
-          businessId: request.businessId,
-          conversationId: request.conversationId,
-          customerPhone: request.customerPhone,
-          amount: request.amount,
-          currency: request.currency || regionConfig.currency,
-          upiId: request.upiId || '',
-          description: request.description
-        });
+        // TODO: Refactor to use providerMetadata for UPI-specific fields
+        // Example:
+        // return await (adapter as UPIAdapter).generateQR({
+        //   businessId: request.businessId,
+        //   conversationId: request.providerMetadata?.conversationId,
+        //   customerPhone: request.providerMetadata?.customerPhone,
+        //   amount: request.amount,
+        //   currency: request.currency || regionConfig.currency,
+        //   upiId: request.providerMetadata?.upiId || '',
+        //   description: request.description
+        // });
+        throw new Error('UPI QR generation via generateQR not implemented. Use providerMetadata for custom fields.');
       }
       
       // Default payment URL generation

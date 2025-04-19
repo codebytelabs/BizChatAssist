@@ -7,6 +7,9 @@ import { MessageChannel, MessageChannelType, MessageSendResult, StandardizedMess
 import { logAction } from '../../security/audit';
 import supabase from '../../utilities/supabase';
 import { v4 as uuidv4 } from 'uuid';
+// @ts-ignore
+// If you see a TypeScript error about uuid, install types: npm i --save-dev @types/uuid
+import twilio from 'twilio';
 
 export class SMSClient implements MessageChannel {
   private apiKey: string;
@@ -14,10 +17,22 @@ export class SMSClient implements MessageChannel {
   private flowId: string; // MSG91 flow ID for template messages
   private isInitialized: boolean = false;
 
+  // Twilio support
+  private twilioClient: ReturnType<typeof twilio> | null = null;
+  private twilioFromSMS: string = '';
+
   constructor() {
     this.apiKey = process.env.MSG91_API_KEY || '';
     this.senderId = process.env.MSG91_SENDER_ID || 'BIZCHAT'; // Default sender ID
     this.flowId = process.env.MSG91_FLOW_ID || '';
+
+    // Twilio setup
+    const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+    const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+    this.twilioFromSMS = process.env.TWILIO_SMS_NUMBER || '';
+    if (twilioSid && twilioToken) {
+      this.twilioClient = twilio(twilioSid, twilioToken);
+    }
   }
 
   /**
@@ -45,7 +60,7 @@ export class SMSClient implements MessageChannel {
       console.error('SMS client initialization failed:', error);
       await logAction({
         action: 'sms_client_init_failed',
-        metadata: { error: error.message || 'Unknown error' }
+        metadata: { error: (error as Error).message || 'Unknown error' }
       });
       return false;
     }
@@ -97,19 +112,11 @@ export class SMSClient implements MessageChannel {
         }
       );
 
-      // Log successful SMS
-      await logAction({
-        action: 'sms_sent',
-        metadata: { to: formattedPhone, length: smsText.length }
-      });
-
-      // MSG91 returns request ID on success
-      const messageId = response.data?.request_id || uuidv4();
-      
-      return { 
-        success: true, 
-        messageId 
-      };
+      if (response.data && response.data.type === 'success') {
+        return { success: true, messageId: response.data.message || 'msg91' };
+      } else {
+        return { success: false, error: response.data.message || 'SMS send failed' };
+      }
     } catch (error: any) {
       console.error('SMS sending error:', error);
       await logAction({
@@ -342,18 +349,6 @@ export class SMSClient implements MessageChannel {
         // But first check monthly quota
         const { data: monthUsage, error: monthError } = await supabase
           .from('sms_usage')
-          .select('count')
-          .eq('business_id', businessId)
-          .eq('month', currentMonth);
-          
-        if (!monthError && monthUsage) {
-          const totalMonthCount = monthUsage.reduce((sum, record) => sum + record.count, 0);
-          if (totalMonthCount >= business.sms_monthly_quota) {
-            return false; // Monthly quota exceeded
-          }
-        }
-        
-        // Create new usage record
         const { error: insertError } = await supabase
           .from('sms_usage')
           .insert({

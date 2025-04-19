@@ -10,6 +10,10 @@
     "rotate-keys": "ts-node security/key-rotation.ts"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.2",
+    "@heroicons/react": "^2.2.0",
+    "@stripe/react-stripe-js": "^3.6.0",
+    "@stripe/stripe-js": "^7.1.0",
     "@supabase/supabase-js": "^2.49.4",
     "axios": "^1.8.4",
     "crypto": "^1.0.1",
@@ -17,9 +21,14 @@
     "multiparty": "^4.2.3",
     "next": "15.3.1",
     "pdfjs": "^2.5.3",
+    "pino": "^9.6.0",
     "qrcode": "^1.5.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "stripe": "^18.0.0",
+    "twilio": "^5.5.2",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -27,6 +36,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "tailwindcss": "^4",

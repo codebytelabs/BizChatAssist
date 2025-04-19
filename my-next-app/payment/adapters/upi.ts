@@ -16,6 +16,7 @@ interface UPITransactionDetails {
 }
 
 export class UPIAdapter implements PaymentAdapter {
+
   async processPayment(request: PaymentRequest) {
     try {
       const { id, amount } = request;
@@ -59,20 +60,26 @@ export class UPIAdapter implements PaymentAdapter {
       await logAction({
         action: 'payment_initiated',
         resourceType: 'transaction',
-        resourceId: id,
-        metadata: { amount, payment_method: 'upi' }
       });
-      
-      return { success: true, transactionId };
+
+      // Return PaymentResult
+      return {
+        success: true,
+        transactionId,
+        provider: 'upi',
+        status: 'pending',
+        rawResponse: null
+      };
     } catch (error: any) {
-      console.error('UPI payment processing error:', error);
-      await logAction({
-        action: 'payment_failed',
-        resourceType: 'transaction',
-        resourceId: request.id,
-        metadata: { error: error.message || 'Unknown error' }
-      });
-      throw error;
+      // Return PaymentResult with error info
+      return {
+        success: false,
+        transactionId: '',
+        provider: 'upi',
+        status: 'failed',
+        rawResponse: null,
+        error: error.message || 'Unknown error'
+      };
     }
   }
   

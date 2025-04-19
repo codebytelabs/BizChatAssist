@@ -1,21 +1,16 @@
 # BizChatAssist
 
-A global multi-channel conversational commerce platform for businesses of all sizes with localized payment integrations and regional compliance support.
+An AI-powered communication automation platform for small-to-medium businesses (SMBs) that enables WhatsApp/SMS automation, information sharing, product/service listing, and appointment scheduling through a clean, intuitive dashboard.
 
-## Features
+## MVP Features
 
-- **Multi-Channel Communication**: Supports both WhatsApp and SMS for global customer interactions
-- **Flexible Payment Integration**: Support for global payment methods with regional adaptations
-  - Western Markets: Stripe, PayPal, credit cards
-  - India: UPI, payment links, and QR codes
-  - APAC: AliPay, WeChat Pay ready
-- **Regional Tax Compliance**: 
-  - US/EU: Sales tax and VAT invoicing
-  - India: GST-compliant invoicing
-  - Brazil: Nota Fiscal support
-- **Industry Templates**: Pre-built templates optimized for different business types
-- **Regulatory Compliance**: GDPR, HIPAA, and CCPA compliance options
-- **Multi-Language Support**: Ready for 40+ languages with specialized handling for key markets
+- **AI-Powered Communication**: Intelligent conversation engine powered by OpenAI for automated customer interactions
+- **WhatsApp/SMS Integration**: Direct messaging through customers' preferred channels
+- **Business Dashboard**: Comprehensive interface for managing all aspects of communication
+- **Product/Service Catalog**: Simple listing and sharing of offerings through messaging channels
+- **Appointment Scheduling**: Automated booking system integrated with messaging
+- **Client Management**: Track and manage customer conversations in one place
+- **Simple Subscription**: Straightforward onboarding and billing for SMB clients
 
 ## Technology Stack
 
