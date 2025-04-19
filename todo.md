@@ -1,23 +1,31 @@
 # BizChatAssist - 90-Day Implementation Plan
 
 ## Strategic Direction
-We're focusing on building BizChatAssist for Indian SMBs first, with specialized UPI payment flows, Hindi language support, and GST-compliant invoicing.
+We're building BizChatAssist as a global platform with strong regional adaptations. The system will have a unified core with specialized modules for different markets, ensuring businesses worldwide get tailored solutions with local compliance and payment methods.
 
 ## Days 1-30: Core Infrastructure
 
 ### Database Schema & Migration
-- [ ] Create `businesses` table with UPI details and preferences
+- [ ] Create `businesses` table with regional payment preferences
 - [ ] Create `templates` table for industry-specific message templates
-- [ ] Create `conversations` table to track WhatsApp interactions
-- [ ] Create `transactions` table for payment tracking
-- [ ] Create `invoices` table for GST-compliant receipts
+- [ ] Create `conversations` table to track messaging across channels
+- [ ] Create `transactions` table with global payment tracking
+- [ ] Create `invoices` table with regional tax compliance (VAT, GST, Sales Tax)
+- [ ] Create `regions` table for regional settings and compliance
 - [ ] Implement Supabase RLS policies for multi-tenant security
 
-### Payment Processing (UPI Focus)
-- [ ] Complete UPI adapter implementation with QR generation
-- [ ] Implement webhook handler for UPI payment confirmations
-- [ ] Create payment status tracking system
-- [ ] Build GST-compliant invoice generator
+### Payment Processing
+- [ ] Implement Payment Adapter System for multiple providers
+  - [ ] Stripe adapter for US/EU markets
+  - [ ] PayPal adapter for global coverage
+  - [ ] UPI adapter for Indian market
+  - [ ] AliPay/WeChat adapter for Chinese market
+- [ ] Create unified webhook handler for all payment confirmations
+- [ ] Build global payment status tracking system
+- [ ] Implement regional tax engines:
+  - [ ] VAT calculation for EU
+  - [ ] GST compliance for India
+  - [ ] Sales tax for US
 
 ### WhatsApp Integration
 - [ ] Set up WhatsApp Business API connection
@@ -31,7 +39,7 @@ We're focusing on building BizChatAssist for Indian SMBs first, with specialized
 - [ ] Implement template management UI
 - [ ] Create payment tracking dashboard
 
-## Days 31-60: Minimum Viable Product
+## Days 31-60: Global MVP
 
 ### Enhanced Conversation Intelligence
 - [ ] Implement basic NLP for intent recognition
@@ -39,10 +47,16 @@ We're focusing on building BizChatAssist for Indian SMBs first, with specialized
 - [ ] Create fallback handling for unknown queries
 - [ ] Implement conversation analytics
 
-### Localization
-- [ ] Add Hindi language support
-- [ ] Implement multi-currency price formatting
-- [ ] Create region-specific templates
+### Localization & Internationalization
+- [ ] Implement i18n framework with translation management
+- [ ] Add support for key languages:
+  - [ ] English, Spanish, French, German, Portuguese
+  - [ ] Hindi, Bengali, Tamil for Indian markets
+  - [ ] Mandarin, Japanese, Korean for APAC markets
+  - [ ] Arabic and Hebrew (RTL support)
+- [ ] Implement multi-currency with dynamic exchange rates
+- [ ] Create global time zone handling with regional date formats
+- [ ] Build region-specific templates with cultural adaptations
 
 ### Business Operations
 - [ ] Build appointment scheduling system
@@ -55,7 +69,7 @@ We're focusing on building BizChatAssist for Indian SMBs first, with specialized
 - [ ] Build API for 3rd party integrations
 - [ ] Implement developer console
 
-## Days 61-90: Go-to-Market
+## Days 61-90: Global Go-to-Market
 
 ### Industry Templates
 - [ ] Create templates for retail stores
@@ -70,10 +84,12 @@ We're focusing on building BizChatAssist for Indian SMBs first, with specialized
 - [ ] Design custom report builder
 
 ### Pricing & Billing
-- [ ] Implement tiered pricing model
-- [ ] Create subscription management
-- [ ] Build usage monitoring
-- [ ] Design billing dashboard
+- [ ] Implement global pricing strategy with regional adjustments
+- [ ] Create tiered pricing with localized currencies
+- [ ] Build subscription management with regional payment methods
+- [ ] Implement usage monitoring with regional quotas
+- [ ] Design billing dashboard with tax documentation for each region
+- [ ] Implement regional compliance for subscription billing:
 
 ### Go-Live Preparation
 - [ ] Complete security audit
